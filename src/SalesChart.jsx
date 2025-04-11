@@ -21,7 +21,6 @@ const SalesChart = ({ data }) => {
   const options = {
     chart: {
       type: "bar",
-      height: 400,
       toolbar: { show: false },
       animations: {
         enabled: true,
@@ -32,11 +31,49 @@ const SalesChart = ({ data }) => {
       },
       background: "transparent",
     },
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          chart: {
+            height: 300,
+          },
+          plotOptions: {
+            bar: {
+              columnWidth: "50%",
+            },
+          },
+          legend: {
+            position: "bottom",
+            fontSize: "14px",
+          },
+        },
+      },
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            height: 280,
+          },
+          xaxis: {
+            labels: {
+              rotate: -45,
+              style: { fontSize: "12px" },
+            },
+          },
+          yaxis: {
+            labels: {
+              style: { fontSize: "12px" },
+            },
+          },
+        },
+      },
+    ],
     colors: ["#007bff", "#4CAF50"],
     plotOptions: {
       bar: {
         borderRadius: 10,
-        columnWidth: "50%",
+        columnWidth: "55%",
         endingShape: "rounded",
         dataLabels: { position: "top" },
       },

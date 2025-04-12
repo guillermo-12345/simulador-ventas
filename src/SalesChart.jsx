@@ -2,7 +2,7 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const ChartCard = ({ title, series, colors }) => {
+const ChartCard = ({ title, series, colors, maxY }) => {
   const options = {
     chart: {
       type: "bar",
@@ -20,7 +20,7 @@ const ChartCard = ({ title, series, colors }) => {
       bar: {
         horizontal: false,
         borderRadius: 10,
-        columnWidth: "80%",
+        columnWidth: "90%",
       },
     },
     dataLabels: { enabled: false },
@@ -30,7 +30,7 @@ const ChartCard = ({ title, series, colors }) => {
     },
     yaxis: {
       labels: { show: false },
-      max: series.reduce((acc, curr) => acc + curr.data[0], 0) * 1.15,
+      max: maxY,
     },
     tooltip: {
       y: { formatter: (val) => `$${val.toLocaleString()}` },
@@ -52,7 +52,7 @@ const ChartCard = ({ title, series, colors }) => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-      <ReactApexChart options={options} series={series} type="bar" height={400} />
+      <ReactApexChart options={options} series={series} type="bar" height={500} />
     </div>
   );
 };
@@ -61,6 +61,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
   const ingresoConApp = ingresoBase + incremento.total;
   const incrementoMarketing = ingresoConApp * 0.25;
   const ingresoPremium = ingresoConApp + incrementoMarketing;
+  const maxY = ingresoPremium * 1.15;
 
   const chart1 = [
     { name: "Ingreso base", data: [ingresoBase] }
@@ -81,9 +82,9 @@ const SalesChart = ({ ingresoBase, incremento }) => {
   return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <ChartCard title="Ingreso base" series={chart1} colors={["#007bff"]} />
-        <ChartCard title="Con App" series={chart2} colors={["#007bff", "#00BCD4", "#FFC107", "#FF5722"]} />
-        <ChartCard title="Plan Premium" series={chart3} colors={["#4CAF50", "#9C27B0"]} />
+        <ChartCard title="Ingreso base" series={chart1} colors={["#007bff"]} maxY={maxY} />
+        <ChartCard title="Con App" series={chart2} colors={["#007bff", "#00BCD4", "#FFC107", "#FF5722"]} maxY={maxY} />
+        <ChartCard title="Plan Premium" series={chart3} colors={["#4CAF50", "#9C27B0"]} maxY={maxY} />
       </div>
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-base">

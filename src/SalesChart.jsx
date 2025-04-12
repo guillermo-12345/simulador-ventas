@@ -14,20 +14,8 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       data: [ingresoBase, ingresoBase, ingresoBase],
     },
     {
-      name: "No-shows",
-      data: [0, incremento.noShows, 0],
-    },
-    {
-      name: "Reagendamiento",
-      data: [0, incremento.rebooking, 0],
-    },
-    {
-      name: "Productividad",
-      data: [0, incremento.productivity, 0],
-    },
-    {
-      name: "Con App",
-      data: [0, 0, ingresoConApp],
+      name: "Incremento App",
+      data: [0, incremento.noShows + incremento.rebooking + incremento.productivity, 0],
     },
     {
       name: "Marketing Premium",
@@ -39,7 +27,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     chart: {
       type: "bar",
       stacked: true,
-      height: 700,
+      height: 800,
       toolbar: { show: false },
       animations: {
         enabled: true,
@@ -54,9 +42,27 @@ const SalesChart = ({ ingresoBase, incremento }) => {
         horizontal: false,
         borderRadius: 10,
         columnWidth: "60%",
+        dataLabels: {
+          position: 'center',
+          total: {
+            enabled: true,
+            style: {
+              fontSize: '14px',
+              fontWeight: 600,
+            }
+          }
+        }
       },
     },
-    dataLabels: { enabled: false },
+    dataLabels: {
+      enabled: true,
+      formatter: (val) => `$${val.toLocaleString()}`,
+      style: {
+        fontSize: '14px',
+        fontWeight: 'bold',
+        colors: ["#fff"]
+      }
+    },
     xaxis: {
       categories: ["Ingreso base", "Con App", "Plan Premium"],
       labels: { style: { fontSize: "14px", colors: ["#555"] } },
@@ -73,7 +79,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       horizontalAlign: "center",
       fontSize: "14px",
     },
-    colors: ["#1E90FF", "#00BFFF", "#FFD700", "#FF4500", "#4CAF50", "#9C27B0"],
+    colors: ["#1E90FF", "#FF7F50", "#9C27B0"],
     fill: {
       type: "solid",
     },
@@ -84,18 +90,16 @@ const SalesChart = ({ ingresoBase, incremento }) => {
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
-      <ReactApexChart options={options} series={series} type="bar" height={720} />
+      <ReactApexChart options={options} series={series} type="bar" height={820} />
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-base">
         <div className="bg-gray-50 p-4 rounded-lg border border-gray-300">
           <h3 className="text-xl font-semibold mb-4 text-[#007bff] text-center">Resumen financiero</h3>
           <ul className="list-disc list-inside space-y-2">
             <li><strong>Ingreso anual base:</strong> ${ingresoBase.toLocaleString()}</li>
-            <li><strong>Incremento por No-shows evitados:</strong> ${incremento.noShows.toLocaleString()}</li>
-            <li><strong>Incremento por Reagendamiento:</strong> ${incremento.rebooking.toLocaleString()}</li>
-            <li><strong>Incremento por Productividad:</strong> ${incremento.productivity.toLocaleString()}</li>
+            <li><strong>Incremento total por funcionalidades de la App:</strong> ${(incremento.noShows + incremento.rebooking + incremento.productivity).toLocaleString()}</li>
             <li><strong>Incremento adicional por Marketing Premium:</strong> ${incrementoMarketing.toLocaleString()}</li>
-            <li><strong>Total estimado con Plan Premium:</strong> ${(ingresoBase + incremento.total + incrementoMarketing).toLocaleString()}</li>
+            <li><strong>Total estimado con Plan Premium:</strong> ${ingresoPremium.toLocaleString()}</li>
           </ul>
         </div>
         <div className="bg-gray-50 p-4 rounded-lg border border-gray-300">

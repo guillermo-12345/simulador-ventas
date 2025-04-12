@@ -18,8 +18,9 @@ const App = () => {
     const uplift = 0.97;
     const contribuciones = {
       noShows: 0.25,
-      rebooking: 0.20,
-      productivity: 0.30,
+      rebooking: 0.15,
+      productivity: 0.20,
+      ticket:0.1,
       marketing: 0.25,
     };
 
@@ -28,6 +29,7 @@ const App = () => {
       rebooking: anual * uplift * contribuciones.rebooking,
       productivity: anual * uplift * contribuciones.productivity,
       premiumMarketing: anual * uplift * contribuciones.marketing,
+      
     };
     incremento.total = incremento.noShows + incremento.rebooking + incremento.productivity;
 

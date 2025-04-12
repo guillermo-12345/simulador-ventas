@@ -1,12 +1,26 @@
 // SalesChart.jsx
-import React from "react";
+import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
-const SalesChart = ({ ingresoBase, incremento }) => {
+const SalesChart = () => {
+  const [ticketPromedio, setTicketPromedio] = useState(0);
+  const [citasPorMes, setCitasPorMes] = useState(0);
+
+  const ingresoBase = ticketPromedio * citasPorMes * 12;
+
+  const incremento = {
+    noShows: ingresoBase * 0.25,
+    rebooking: ingresoBase * 0.15,
+    productivity: ingresoBase * 0.2,
+  };
+
   const incrementoAppTotal = incremento.noShows + incremento.rebooking + incremento.productivity;
   const ingresoConApp = ingresoBase + incrementoAppTotal;
-  const incrementoMarketing = ingresoConApp * 0.25;
-  const ingresoPremium = ingresoBase + incrementoAppTotal + incrementoMarketing;
+
+  const incrementoMarketing = ingresoConApp * 0.27;
+  const incrementoTicketPromedio = ingresoConApp * 0.1;
+
+  const ingresoPremium = ingresoConApp + incrementoMarketing + incrementoTicketPromedio;
   const maxY = ingresoPremium * 1.2;
 
   const series = [
@@ -20,7 +34,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     },
     {
       name: "Con MioSalon Premium",
-      data: [0, 0, incrementoMarketing],
+      data: [0, 0, incrementoMarketing + incrementoTicketPromedio],
     }
   ];
 
@@ -50,13 +64,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     },
     dataLabels: {
       enabled: true,
-      formatter: (val, { seriesIndex, dataPointIndex, w }) => {
-        if (seriesIndex === 0) {
-          const total = w.globals.stackedSeriesTotals[dataPointIndex];
-          return `$${total.toLocaleString()}`;
-        }
-        return `$${val.toLocaleString()}`;
-      },
+      formatter: (val) => `$${val.toLocaleString()}`,
       style: {
         fontSize: '14px',
         fontWeight: 'bold',
@@ -88,37 +96,62 @@ const SalesChart = ({ ingresoBase, incremento }) => {
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
+      <h2 className="text-2xl font-bold text-center mb-6 text-[#4CAF50]">
+        Simulación de Ingreso Anual con MioSalon
+      </h2>
+
+      <div className="flex flex-col md:flex-row gap-6 mb-8 justify-center">
+        <div className="flex flex-col">
+          <label className="font-medium text-gray-700 mb-1">Ticket promedio</label>
+          <input type="number" value={ticketPromedio} onChange={(e) => setTicketPromedio(Number(e.target.value))} className="border rounded px-4 py-2 w-full" />
+        </div>
+        <div className="flex flex-col">
+          <label className="font-medium text-gray-700 mb-1">Promedio de citas por mes</label>
+          <input type="number" value={citasPorMes} onChange={(e) => setCitasPorMes(Number(e.target.value))} className="border rounded px-4 py-2 w-full" />
+        </div>
+      </div>
+
       <ReactApexChart options={options} series={series} type="bar" height={820} />
 
       <div className="mt-10 overflow-x-auto">
         <table className="min-w-full border text-sm text-center rounded-lg">
           <thead className="bg-purple-800 text-white">
             <tr>
-              <th className="py-3 px-4">Métrica</th>
-              <th className="py-3 px-4">% Incremento</th>
-              <th className="py-3 px-4">Monto</th>
+              <th className="py-4 px-6">Métrica</th>
+              <th className="py-4 px-6">% Incremento</th>
+              <th className="py-4 px-6">Monto</th>
             </tr>
           </thead>
-          <tbody className="bg-white">
-            <tr className="border-b">
-              <td className="py-2 px-4 font-semibold text-purple-700">Ingreso Base</td>
-              <td className="py-2 px-4">-</td>
-              <td className="py-2 px-4">${ingresoBase.toLocaleString()}</td>
+          <tbody className="bg-white divide-y divide-gray-200">
+            <tr className="bg-[#F3E8FF]">
+              <td className="py-4 px-6 font-semibold text-purple-700">Ingreso Base</td>
+              <td className="py-4 px-6">-</td>
+              <td className="py-4 px-6">${ingresoBase.toLocaleString()}</td>
             </tr>
-            <tr className="bg-pink-100 border-b">
-              <td className="py-2 px-4 font-semibold">Incremento por funcionalidades de la App</td>
-              <td className="py-2 px-4">{((incrementoAppTotal / ingresoBase) * 100).toFixed(1)}%</td>
-              <td className="py-2 px-4">+${incrementoAppTotal.toLocaleString()}</td>
+            <tr className="bg-[#FFF1F2]">
+              <td className="py-4 px-6 font-semibold">Incremento por funcionalidades de la App</td>
+              <td className="py-4 px-6">70%</td>
+              <td className="py-4 px-6">+${incrementoAppTotal.toLocaleString()}</td>
             </tr>
-            <tr className="bg-pink-200 border-b">
-              <td className="py-2 px-4 font-semibold">Incremento por Marketing Premium</td>
-              <td className="py-2 px-4">25%</td>
-              <td className="py-2 px-4">+${incrementoMarketing.toLocaleString()}</td>
+            <tr className="bg-[#FDF6F0]">
+              <td className="py-4 px-6 font-semibold">Total estimado con MioSalon</td>
+              <td className="py-4 px-6">{(((ingresoConApp - ingresoBase) / ingresoBase) * 100).toFixed(1)}%</td>
+              <td className="py-4 px-6">${ingresoConApp.toLocaleString()}</td>
             </tr>
-            <tr className="bg-green-100 font-bold">
-              <td className="py-2 px-4">Total estimado con Premium</td>
-              <td className="py-2 px-4">{(((ingresoPremium - ingresoBase) / ingresoBase) * 100).toFixed(1)}%</td>
-              <td className="py-2 px-4">${ingresoPremium.toLocaleString()}</td>
+            <tr className="bg-[#EDE7F6]">
+              <td className="py-4 px-6 font-semibold">Incremento por Marketing Premium</td>
+              <td className="py-4 px-6">27%</td>
+              <td className="py-4 px-6">+${incrementoMarketing.toLocaleString()}</td>
+            </tr>
+            <tr className="bg-[#E8F5E9]">
+              <td className="py-4 px-6 font-semibold">Incremento por Ticket Promedio</td>
+              <td className="py-4 px-6">10%</td>
+              <td className="py-4 px-6">+${incrementoTicketPromedio.toLocaleString()}</td>
+            </tr>
+            <tr className="bg-[#DCEDC8] text-green-900 font-bold">
+              <td className="py-4 px-6">Total estimado con Premium</td>
+              <td className="py-4 px-6">{(((ingresoPremium - ingresoBase) / ingresoBase) * 100).toFixed(1)}%</td>
+              <td className="py-4 px-6">${ingresoPremium.toLocaleString()}</td>
             </tr>
           </tbody>
         </table>

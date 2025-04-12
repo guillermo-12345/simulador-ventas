@@ -3,7 +3,8 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 const SalesChart = ({ ingresoBase, incremento }) => {
-  const ingresoConApp = ingresoBase + incremento.total;
+  const incrementoAppTotal = incremento.noShows + incremento.rebooking + incremento.productivity;
+  const ingresoConApp = ingresoBase + incrementoAppTotal;
   const incrementoMarketing = ingresoConApp * 0.25;
   const ingresoPremium = ingresoConApp + incrementoMarketing;
   const maxY = ingresoPremium * 1.2;
@@ -15,7 +16,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     },
     {
       name: "Incremento App",
-      data: [0, incremento.noShows + incremento.rebooking + incremento.productivity, 0],
+      data: [0, incrementoAppTotal, 0],
     },
     {
       name: "Marketing Premium",
@@ -43,14 +44,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
         borderRadius: 10,
         columnWidth: "60%",
         dataLabels: {
-          position: 'center',
-          total: {
-            enabled: true,
-            style: {
-              fontSize: '14px',
-              fontWeight: 600,
-            }
-          }
+          position: 'center'
         }
       },
     },
@@ -97,7 +91,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
           <h3 className="text-xl font-semibold mb-4 text-[#007bff] text-center">Resumen financiero</h3>
           <ul className="list-disc list-inside space-y-2">
             <li><strong>Ingreso anual base:</strong> ${ingresoBase.toLocaleString()}</li>
-            <li><strong>Incremento total por funcionalidades de la App:</strong> ${(incremento.noShows + incremento.rebooking + incremento.productivity).toLocaleString()}</li>
+            <li><strong>Incremento total por funcionalidades de la App:</strong> ${incrementoAppTotal.toLocaleString()}</li>
             <li><strong>Incremento adicional por Marketing Premium:</strong> ${incrementoMarketing.toLocaleString()}</li>
             <li><strong>Total estimado con Plan Premium:</strong> ${ingresoPremium.toLocaleString()}</li>
           </ul>

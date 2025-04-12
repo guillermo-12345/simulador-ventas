@@ -1,9 +1,10 @@
-// SalesChart.jsx
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 const SalesChart = ({ ticketPromedio, citasPorMes }) => {
-  const ingresoBase = ticketPromedio * citasPorMes * 12;
+  if (!ticketPromedio || !citasPorMes) return null;
+
+  const ingresoBase = Number(ticketPromedio) * Number(citasPorMes) * 12;
 
   const incremento = {
     noShows: ingresoBase * 0.25,

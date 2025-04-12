@@ -73,7 +73,7 @@ const App = () => {
         </div>
       </div>
 
-      {ingresoBase && incremento && <SalesChart ingresoBase={ingresoBase} incremento={incremento} />}
+      {ticket > 0 && citas > 0 && (<SalesChart ticketPromedio={ticket} citasPorMes={citas} />)}
 
       {incremento && (
         <div className="max-w-4xl mx-auto mt-8 bg-white p-8 rounded-xl shadow-md border border-gray-200">

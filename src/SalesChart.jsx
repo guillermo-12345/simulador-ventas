@@ -2,16 +2,49 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const ChartCard = ({ title, series, colors, maxY }) => {
+const SalesChart = ({ ingresoBase, incremento }) => {
+  const ingresoConApp = ingresoBase + incremento.total;
+  const incrementoMarketing = ingresoConApp * 0.25;
+  const ingresoPremium = ingresoConApp + incrementoMarketing;
+  const maxY = ingresoPremium * 1.2;
+
+  const series = [
+    {
+      name: "Ingreso base",
+      data: [ingresoBase, ingresoBase, 0],
+    },
+    {
+      name: "No-shows",
+      data: [0, incremento.noShows, 0],
+    },
+    {
+      name: "Reagendamiento",
+      data: [0, incremento.rebooking, 0],
+    },
+    {
+      name: "Productividad",
+      data: [0, incremento.productivity, 0],
+    },
+    {
+      name: "Marketing Premium",
+      data: [0, 0, incrementoMarketing],
+    },
+    {
+      name: "Con App",
+      data: [0, 0, ingresoConApp],
+    }
+  ];
+
   const options = {
     chart: {
       type: "bar",
       stacked: true,
+      height: 600,
       toolbar: { show: false },
       animations: {
         enabled: true,
         easing: "easeinout",
-        speed: 1500,
+        speed: 2000,
         animateGradually: { enabled: true, delay: 100 },
         dynamicAnimation: { enabled: true, speed: 400 },
       },
@@ -20,12 +53,12 @@ const ChartCard = ({ title, series, colors, maxY }) => {
       bar: {
         horizontal: false,
         borderRadius: 10,
-        columnWidth: "90%",
+        columnWidth: "70%",
       },
     },
     dataLabels: { enabled: false },
     xaxis: {
-      categories: [title],
+      categories: ["Ingreso base", "Con App", "Plan Premium"],
       labels: { style: { fontSize: "14px", colors: ["#555"] } },
     },
     yaxis: {
@@ -35,57 +68,23 @@ const ChartCard = ({ title, series, colors, maxY }) => {
     tooltip: {
       y: { formatter: (val) => `$${val.toLocaleString()}` },
     },
-    colors: colors,
-    fill: {
-      type: "gradient",
-      gradient: {
-        shade: "light",
-        type: "vertical",
-        shadeIntensity: 0.4,
-        opacityFrom: 0.85,
-        opacityTo: 0.15,
-        stops: [0, 90, 100],
-      },
+    legend: {
+      position: "right",
+      horizontalAlign: "center",
+      fontSize: "14px",
     },
-    grid: { show: false },
+    colors: ["#1E90FF", "#00BFFF", "#FFD700", "#FF4500", "#9C27B0", "#4CAF50"],
+    fill: {
+      type: "solid",
+    },
+    grid: {
+      show: false,
+    },
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-      <ReactApexChart options={options} series={series} type="bar" height={500} />
-    </div>
-  );
-};
-
-const SalesChart = ({ ingresoBase, incremento }) => {
-  const ingresoConApp = ingresoBase + incremento.total;
-  const incrementoMarketing = ingresoConApp * 0.25;
-  const ingresoPremium = ingresoConApp + incrementoMarketing;
-  const maxY = ingresoPremium * 1.15;
-
-  const chart1 = [
-    { name: "Ingreso base", data: [ingresoBase] }
-  ];
-
-  const chart2 = [
-    { name: "Ingreso base", data: [ingresoBase] },
-    { name: "No-shows", data: [incremento.noShows] },
-    { name: "Reagendamiento", data: [incremento.rebooking] },
-    { name: "Productividad", data: [incremento.productivity] }
-  ];
-
-  const chart3 = [
-    { name: "Con App", data: [ingresoConApp] },
-    { name: "Marketing Premium", data: [incrementoMarketing] }
-  ];
-
-  return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <ChartCard title="Ingreso base" series={chart1} colors={["#007bff"]} maxY={maxY} />
-        <ChartCard title="Con App" series={chart2} colors={["#007bff", "#00BCD4", "#FFC107", "#FF5722"]} maxY={maxY} />
-        <ChartCard title="Plan Premium" series={chart3} colors={["#4CAF50", "#9C27B0"]} maxY={maxY} />
-      </div>
+      <ReactApexChart options={options} series={series} type="bar" height={620} />
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-base">
         <div className="bg-gray-50 p-4 rounded-lg border border-gray-300">

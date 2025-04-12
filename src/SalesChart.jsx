@@ -16,7 +16,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     },
     {
       name: "Incremento App",
-      data: [0, incrementoAppTotal, 0],
+      data: [0, incrementoAppTotal, incrementoAppTotal],
     },
     {
       name: "Marketing Premium",
@@ -50,7 +50,14 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     },
     dataLabels: {
       enabled: true,
-      formatter: (val) => `$${val.toLocaleString()}`,
+      formatter: (val, { seriesIndex, dataPointIndex, w }) => {
+        // Solo mostrar valor total en la parte inferior (una sola vez por columna)
+        if (seriesIndex === 0) {
+          const total = w.globals.stackedSeriesTotals[dataPointIndex];
+          return `$${total.toLocaleString()}`;
+        }
+        return `$${val.toLocaleString()}`;
+      },
       style: {
         fontSize: '14px',
         fontWeight: 'bold',

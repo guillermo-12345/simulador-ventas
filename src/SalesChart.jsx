@@ -2,114 +2,74 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const SalesChart = ({ ingresoBase, incremento }) => {
-  const ingresoConApp = ingresoBase + incremento.total;
-  const incrementoMarketing = ingresoConApp * 0.25;
-  const ingresoPremium = ingresoConApp + incrementoMarketing;
-
-  const series = [
-    {
-      name: "Ingreso base",
-      data: [ingresoBase],
-    },
-    {
-      name: "No-shows evitados",
-      data: [incremento.noShows],
-    },
-    {
-      name: "Reagendamiento",
-      data: [incremento.rebooking],
-    },
-    {
-      name: "Productividad",
-      data: [incremento.productivity],
-    },
-    {
-      name: "Marketing (Plan Premium)",
-      data: [incrementoMarketing],
-    },
-  ];
+const ChartCard = ({ title, value, color }) => {
+  const series = [{ name: title, data: [value] }];
 
   const options = {
     chart: {
       type: "bar",
-      stacked: true,
-      height: 550,
       toolbar: { show: false },
       animations: {
         enabled: true,
         easing: "easeinout",
-        speed: 2000,
-        animateGradually: { enabled: true, delay: 300 },
-        dynamicAnimation: { enabled: true, speed: 600 },
+        speed: 1500,
+        animateGradually: { enabled: true, delay: 100 },
+        dynamicAnimation: { enabled: true, speed: 400 },
       },
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        borderRadius: 12,
-        columnWidth: "70%",
-        dataLabels: { position: "top" },
+        borderRadius: 8,
+        columnWidth: "80%",
       },
     },
-    dataLabels: {
-      enabled: false,
-    },
-    legend: {
-      position: "top",
-      horizontalAlign: "center",
-      fontSize: "14px",
-    },
+    dataLabels: { enabled: false },
     xaxis: {
-      categories: ["Escenario acumulado"],
-      labels: {
-        style: {
-          fontSize: "14px",
-          colors: ["#555"],
-        },
-      },
+      categories: [title],
+      labels: { style: { fontSize: "14px", colors: ["#555"] } },
     },
     yaxis: {
-      labels: {
-        formatter: (val) => `$${val.toLocaleString()}`,
-        style: { fontSize: "14px", colors: "#555" },
-      },
+      labels: { show: false },
     },
     tooltip: {
-      y: {
-        formatter: (val) => `$${val.toLocaleString()}`,
-      },
+      y: { formatter: (val) => `$${val.toLocaleString()}` },
     },
-    colors: ["#007bff", "#00BCD4", "#FFC107", "#FF5722", "#9C27B0"],
+    colors: [color],
     fill: {
       type: "gradient",
       gradient: {
-        type: "vertical",
         shade: "light",
+        type: "vertical",
         shadeIntensity: 0.4,
-        opacityFrom: 0.9,
-        opacityTo: 0.2,
+        opacityFrom: 0.85,
+        opacityTo: 0.15,
         stops: [0, 90, 100],
       },
     },
-    grid: {
-      borderColor: "#eee",
-      strokeDashArray: 5,
-    },
-    responsive: [
-      {
-        breakpoint: 768,
-        options: {
-          chart: { height: 400 },
-          legend: { position: "bottom" },
-        },
-      },
-    ],
+    grid: { show: false },
   };
 
   return (
+    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+      <ReactApexChart options={options} series={series} type="bar" height={300} />
+    </div>
+  );
+};
+
+const SalesChart = ({ ingresoBase, incremento }) => {
+  const ingresoConApp = ingresoBase + incremento.total;
+  const incrementoMarketing = ingresoConApp * 0.25;
+  const ingresoPremium = ingresoConApp + incrementoMarketing;
+
+  return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
-      <ReactApexChart options={options} series={series} type="bar" height={580} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <ChartCard title="Ingreso base" value={ingresoBase} color="#007bff" />
+        <ChartCard title="Con App" value={ingresoConApp} color="#4CAF50" />
+        <ChartCard title="Plan Premium" value={ingresoPremium} color="#9C27B0" />
+      </div>
+
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-base">
         <div className="bg-gray-50 p-4 rounded-lg border border-gray-300">
           <h3 className="text-xl font-semibold mb-4 text-[#007bff] text-center">Resumen financiero</h3>

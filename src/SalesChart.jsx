@@ -65,7 +65,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       }
     },
     xaxis: {
-      categories: ["Ingreso base", "Con App", "Plan Premium"],
+      categories: ["Ingreso base", "Con Miosalon", "Miosalon Premium"],
       labels: { style: { fontSize: "14px", colors: ["#555"] } },
     },
     yaxis: {

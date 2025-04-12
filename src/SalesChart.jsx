@@ -11,7 +11,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
   const series = [
     {
       name: "Ingreso base",
-      data: [ingresoBase, ingresoBase, 0],
+      data: [ingresoBase, ingresoBase, ingresoBase],
     },
     {
       name: "No-shows",
@@ -26,12 +26,12 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       data: [0, incremento.productivity, 0],
     },
     {
-      name: "Marketing Premium",
-      data: [0, 0, incrementoMarketing],
-    },
-    {
       name: "Con App",
       data: [0, 0, ingresoConApp],
+    },
+    {
+      name: "Marketing Premium",
+      data: [0, 0, incrementoMarketing],
     }
   ];
 
@@ -39,7 +39,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     chart: {
       type: "bar",
       stacked: true,
-      height: 600,
+      height: 700,
       toolbar: { show: false },
       animations: {
         enabled: true,
@@ -53,7 +53,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       bar: {
         horizontal: false,
         borderRadius: 10,
-        columnWidth: "70%",
+        columnWidth: "60%",
       },
     },
     dataLabels: { enabled: false },
@@ -73,7 +73,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       horizontalAlign: "center",
       fontSize: "14px",
     },
-    colors: ["#1E90FF", "#00BFFF", "#FFD700", "#FF4500", "#9C27B0", "#4CAF50"],
+    colors: ["#1E90FF", "#00BFFF", "#FFD700", "#FF4500", "#4CAF50", "#9C27B0"],
     fill: {
       type: "solid",
     },
@@ -84,7 +84,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
-      <ReactApexChart options={options} series={series} type="bar" height={620} />
+      <ReactApexChart options={options} series={series} type="bar" height={720} />
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-base">
         <div className="bg-gray-50 p-4 rounded-lg border border-gray-300">

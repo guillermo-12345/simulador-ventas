@@ -6,20 +6,20 @@ const SalesChart = ({ ingresoBase, incremento }) => {
   const incrementoAppTotal = incremento.noShows + incremento.rebooking + incremento.productivity;
   const ingresoConApp = ingresoBase + incrementoAppTotal;
   const incrementoMarketing = ingresoConApp * 0.25;
-  const ingresoPremium = ingresoConApp + incrementoMarketing;
+  const ingresoPremium = ingresoBase + incrementoAppTotal + incrementoMarketing;
   const maxY = ingresoPremium * 1.2;
 
   const series = [
     {
-      name: "Ingreso base",
+      name: "Sin MioSalon",
       data: [ingresoBase, ingresoBase, ingresoBase],
     },
     {
-      name: "Incremento App",
+      name: "Con MioSalon",
       data: [0, incrementoAppTotal, incrementoAppTotal],
     },
     {
-      name: "Marketing Premium",
+      name: "Con MioSalon Premium",
       data: [0, 0, incrementoMarketing],
     }
   ];
@@ -42,7 +42,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       bar: {
         horizontal: false,
         borderRadius: 10,
-        columnWidth: "60%",
+        columnWidth: "75%",
         dataLabels: {
           position: 'center'
         }
@@ -51,7 +51,6 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     dataLabels: {
       enabled: true,
       formatter: (val, { seriesIndex, dataPointIndex, w }) => {
-        // Solo mostrar valor total en la parte inferior (una sola vez por columna)
         if (seriesIndex === 0) {
           const total = w.globals.stackedSeriesTotals[dataPointIndex];
           return `$${total.toLocaleString()}`;
@@ -65,7 +64,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       }
     },
     xaxis: {
-      categories: ["Ingreso base", "Con Miosalon", "Miosalon Premium"],
+      categories: ["Sin MioSalon", "Con MioSalon", "Con MioSalon Premium"],
       labels: { style: { fontSize: "14px", colors: ["#555"] } },
     },
     yaxis: {
@@ -76,9 +75,7 @@ const SalesChart = ({ ingresoBase, incremento }) => {
       y: { formatter: (val) => `$${val.toLocaleString()}` },
     },
     legend: {
-      position: "right",
-      horizontalAlign: "center",
-      fontSize: "14px",
+      show: false
     },
     colors: ["#1E90FF", "#FF7F50", "#9C27B0"],
     fill: {
@@ -93,28 +90,38 @@ const SalesChart = ({ ingresoBase, incremento }) => {
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
       <ReactApexChart options={options} series={series} type="bar" height={820} />
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-base">
-        <div className="bg-gray-50 p-4 rounded-lg border border-gray-300">
-          <h3 className="text-xl font-semibold mb-4 text-[#007bff] text-center">Resumen financiero</h3>
-          <ul className="list-disc list-inside space-y-2">
-            <li><strong>Ingreso anual base:</strong> ${ingresoBase.toLocaleString()}</li>
-            <li><strong>Incremento total por funcionalidades de la App:</strong> ${incrementoAppTotal.toLocaleString()}</li>
-            <li><strong>Incremento adicional por Marketing Premium:</strong> ${incrementoMarketing.toLocaleString()}</li>
-            <li><strong>Total estimado con Plan Premium:</strong> ${ingresoPremium.toLocaleString()}</li>
-          </ul>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg border border-gray-300">
-          <h3 className="text-xl font-semibold mb-4 text-[#4CAF50] text-center">Impacto con MioSalon</h3>
-          <ul className="list-decimal list-inside space-y-2">
-            <li>Reducción de ausencias con recordatorios automáticos</li>
-            <li>Reagendamiento inteligente de clientes perdidos</li>
-            <li>Aumento de productividad con mejores flujos de trabajo</li>
-            <li>Promociones efectivas con marketing automatizado</li>
-            <li>Incremento del ticket medio por cliente</li>
-            <li>Más citas agendadas sin esfuerzo manual</li>
-            <li>Decisiones basadas en datos reales del negocio</li>
-          </ul>
-        </div>
+      <div className="mt-10 overflow-x-auto">
+        <table className="min-w-full border text-sm text-center rounded-lg">
+          <thead className="bg-purple-800 text-white">
+            <tr>
+              <th className="py-3 px-4">Métrica</th>
+              <th className="py-3 px-4">% Incremento</th>
+              <th className="py-3 px-4">Monto</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white">
+            <tr className="border-b">
+              <td className="py-2 px-4 font-semibold text-purple-700">Ingreso Base</td>
+              <td className="py-2 px-4">-</td>
+              <td className="py-2 px-4">${ingresoBase.toLocaleString()}</td>
+            </tr>
+            <tr className="bg-pink-100 border-b">
+              <td className="py-2 px-4 font-semibold">Incremento por funcionalidades de la App</td>
+              <td className="py-2 px-4">{((incrementoAppTotal / ingresoBase) * 100).toFixed(1)}%</td>
+              <td className="py-2 px-4">+${incrementoAppTotal.toLocaleString()}</td>
+            </tr>
+            <tr className="bg-pink-200 border-b">
+              <td className="py-2 px-4 font-semibold">Incremento por Marketing Premium</td>
+              <td className="py-2 px-4">25%</td>
+              <td className="py-2 px-4">+${incrementoMarketing.toLocaleString()}</td>
+            </tr>
+            <tr className="bg-green-100 font-bold">
+              <td className="py-2 px-4">Total estimado con Premium</td>
+              <td className="py-2 px-4">{(((ingresoPremium - ingresoBase) / ingresoBase) * 100).toFixed(1)}%</td>
+              <td className="py-2 px-4">${ingresoPremium.toLocaleString()}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   );

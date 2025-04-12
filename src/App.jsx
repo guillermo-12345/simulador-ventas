@@ -57,7 +57,7 @@ const App = () => {
             />
           </label>
           <label className="flex flex-col">
-            <span className="font-medium text-gray-700">Cantidad de citas por mes:</span>
+            <span className="font-medium text-gray-700">Promedio de citas por mes:</span>
             <input
               type="number"
               value={citas}

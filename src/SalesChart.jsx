@@ -100,18 +100,7 @@ const SalesChart = () => {
         Simulación de Ingreso Anual con MioSalon
       </h2>
 
-      <div className="flex flex-col md:flex-row gap-6 mb-8 justify-center">
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700 mb-1">Ticket promedio</label>
-          <input type="number" value={ticketPromedio} onChange={(e) => setTicketPromedio(Number(e.target.value))} className="border rounded px-4 py-2 w-full" />
-        </div>
-        <div className="flex flex-col">
-          <label className="font-medium text-gray-700 mb-1">Promedio de citas por mes</label>
-          <input type="number" value={citasPorMes} onChange={(e) => setCitasPorMes(Number(e.target.value))} className="border rounded px-4 py-2 w-full" />
-        </div>
-      </div>
-
-      <ReactApexChart options={options} series={series} type="bar" height={820} />
+      <ReactApexChart options={options} series={series} type="bar" height={800} />
 
       <div className="mt-10 overflow-x-auto">
         <table className="min-w-full border text-sm text-center rounded-lg">

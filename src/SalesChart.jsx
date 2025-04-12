@@ -2,25 +2,38 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const SalesChart = ({ data }) => {
-  const categories = data.map((item) => item.mes);
-  const normales = data.map((item) => item["Ventas normales"]);
-  const app = data.map((item) => item["Ventas con nuestra app"]);
-
+const SalesChart = ({ ingresoBase, incremento }) => {
   const series = [
     {
-      name: "Ventas normales",
-      data: normales,
+      name: "Ingreso anual base",
+      data: [ingresoBase],
     },
     {
-      name: "Con nuestra app",
-      data: app,
+      name: "Ingreso incrementado total",
+      data: [ingresoBase + incremento.total],
     },
+    {
+      name: "No-shows evitados",
+      data: [incremento.noShows],
+    },
+    {
+      name: "Reagendamiento",
+      data: [incremento.rebooking],
+    },
+    {
+      name: "Productividad",
+      data: [incremento.productivity],
+    },
+    {
+      name: "Plan Premium (Marketing)",
+      data: [incremento.premiumMarketing],
+    }
   ];
 
   const options = {
     chart: {
       type: "bar",
+      stacked: true,
       toolbar: { show: false },
       animations: {
         enabled: true,
@@ -29,69 +42,18 @@ const SalesChart = ({ data }) => {
         animateGradually: { enabled: true, delay: 200 },
         dynamicAnimation: { enabled: true, speed: 500 },
       },
-      background: "transparent",
     },
-    responsive: [
-      {
-        breakpoint: 768,
-        options: {
-          chart: {
-            height: 300,
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: "50%",
-            },
-          },
-          legend: {
-            position: "bottom",
-            fontSize: "14px",
-          },
-        },
-      },
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 280,
-          },
-          xaxis: {
-            labels: {
-              rotate: -45,
-              style: { fontSize: "12px" },
-            },
-          },
-          yaxis: {
-            labels: {
-              style: { fontSize: "12px" },
-            },
-          },
-        },
-      },
-    ],
-    colors: ["#007bff", "#4CAF50"],
     plotOptions: {
       bar: {
+        horizontal: false,
         borderRadius: 10,
-        columnWidth: "55%",
+        columnWidth: "45%",
         endingShape: "rounded",
-        dataLabels: { position: "top" },
       },
     },
-    dataLabels: {
-      enabled: false,
-    },
-    legend: {
-      position: "top",
-      horizontalAlign: "center",
-      fontSize: "16px",
-      markers: {
-        radius: 12,
-      },
-    },
+    dataLabels: { enabled: false },
     xaxis: {
-      categories,
-      axisBorder: { show: false },
+      categories: ["Escenario anual"],
       labels: { style: { fontSize: "14px", colors: "#555" } },
     },
     yaxis: {
@@ -100,21 +62,32 @@ const SalesChart = ({ data }) => {
         style: { fontSize: "14px", colors: "#555" },
       },
     },
+    legend: {
+      position: "top",
+      horizontalAlign: "center",
+      fontSize: "14px",
+    },
     tooltip: {
-      theme: "light",
-      style: { fontSize: "14px" },
       y: {
         formatter: (val) => `$${val.toLocaleString()}`,
       },
     },
+    colors: [
+      "#007bff", // base
+      "#4CAF50", // total
+      "#00BCD4", // no-shows
+      "#FFC107", // rebooking
+      "#FF5722", // productividad
+      "#9C27B0"  // premium marketing
+    ],
     fill: {
       type: "gradient",
       gradient: {
         shade: "light",
         type: "vertical",
-        shadeIntensity: 0.5,
-        opacityFrom: 0.9,
-        opacityTo: 0.2,
+        shadeIntensity: 0.4,
+        opacityFrom: 0.85,
+        opacityTo: 0.1,
         stops: [0, 90, 100],
       },
     },
@@ -122,6 +95,15 @@ const SalesChart = ({ data }) => {
       borderColor: "#eee",
       strokeDashArray: 5,
     },
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          chart: { height: 320 },
+          legend: { position: "bottom" },
+        },
+      },
+    ],
   };
 
   return (

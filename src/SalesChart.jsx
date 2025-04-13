@@ -36,6 +36,7 @@ const SalesChart = ({ ticketPromedio, citasPorMes }) => {
       data: [0, 0, incrementoMarketing + incrementoTicketPromedio],
     }
   ];
+  
 
   const options = {
     chart: {
@@ -79,7 +80,37 @@ const SalesChart = ({ ticketPromedio, citasPorMes }) => {
       max: maxY,
     },
     tooltip: {
-      y: { formatter: (val) => `$${val.toLocaleString()}` },
+      enabled: true,
+      shared: false,
+      custom: function({ series, seriesIndex, dataPointIndex }) {
+        const ingresoBase = series[0][dataPointIndex];
+        const incrementoApp = series[1][dataPointIndex];
+        const incrementoPremium = series[2][dataPointIndex];
+    
+        if (dataPointIndex === 0) {
+          return `<div class="px-3 py-2 text-sm font-medium">Ingreso Base:<br/><strong>$${ingresoBase.toLocaleString()}</strong></div>`;
+        }
+    
+        if (dataPointIndex === 1) {
+          const noShow = incrementoApp * 0.414;
+          const rebooking = incrementoApp * 0.25;
+          const productividad = incrementoApp * 0.331;
+          return `
+            <div class="px-3 py-2 text-sm">
+              <strong>Con MioSalon:</strong><br/>
+              No-shows evitados: $${noShow.toLocaleString()}<br/>
+              Reagendamiento: $${rebooking.toLocaleString()}<br/>
+              Productividad: $${productividad.toLocaleString()}
+            </div>`;
+        }
+    
+        if (dataPointIndex === 2) {
+          return `
+            <div class="px-3 py-2 text-sm">
+              <strong>Plan Premium:</strong><br/>
+              Marketing & promociones: <br/><strong>$${incrementoPremium.toLocaleString()}</strong>
+            </div>`;
+        }},
     },
     legend: {
       show: false
@@ -92,7 +123,8 @@ const SalesChart = ({ ticketPromedio, citasPorMes }) => {
       show: false,
     },
   };
-
+  
+  
   return (
     <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mt-6">
       <h2 className="text-2xl font-bold text-center mb-6 text-[#4CAF50]">
